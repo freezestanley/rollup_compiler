@@ -1,0 +1,72 @@
+{
+  "name": "@lcap/shared",
+  "version": "0.0.181",
+  "description": "@lcap/shared",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "NODE_ENV=production rollup -c rollup.config.js --bundleConfigAsCjs",
+    "prepublishOnly": "npm run build",
+    "postpublish": "rimraf -rf lib"
+  },
+  "dependencies": {
+    "less": "^4.1.3",
+    "postcss": "^8.4.20",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.5",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.19.6",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/preset-typescript": "^7.18.6",
+    "@rollup/plugin-alias": "^4.0.2",
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-beep": "^1.0.0",
+    "@rollup/plugin-commonjs": "^23.0.5",
+    "@rollup/plugin-eslint": "^9.0.1",
+    "@rollup/plugin-html": "^1.0.1",
+    "@rollup/plugin-inject": "^5.0.2",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-strip": "^3.0.1",
+    "@rollup/plugin-terser": "^0.2.0",
+    "@rollup/plugin-typescript": "^10.0.1",
+    "@rollup/plugin-url": "^8.0.1",
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.9",
+    "@types/rollup-plugin-peer-deps-external": "^2.2.1",
+    "autoprefixer": "^10.4.13",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "cssnano": "^5.1.14",
+    "node-sass": "^8.0.0",
+    "rollup": "3.7.5",
+    "rollup-plugin-clear": "^2.0.7",
+    "rollup-plugin-dts": "^5.0.0",
+    "rollup-plugin-livereload": "^2.0.5",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-serve": "^2.0.2",
+    "rollup-plugin-typescript2": "^0.34.1",
+    "tslib": "^2.4.1",
+    "typescript": "^4.9.4"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "main": "closure.js",
+  "author": "",
+  "license": "ISC",
+  "__LCAP_PUBLISH_DETAIL__": {
+    "version": "0.0.108",
+    "latestCommit": "commit 1e7475d0b6721d8579e99c3999b71e5bbb60f075\nAuthor: luoju <luoju@zhongan.com>\nDate:   Tue Nov 1 21:21:44 2022 +0800\n\n    准备发布108\n\n lerna.json        |     2 +-\n package-lock.json | 37429 +++++++++-------------------------------------------\n package.json      |     2 +-\n 3 files changed, 6507 insertions(+), 30926 deletions(-)\n",
+    "dirLatestCommit": "commit 475d4b857faaabeae052f0a6c9e9690eb24b606b\nAuthor: zhuyongyu001 <zhuyongyu001@zhongan.com>\nDate:   Mon Oct 31 11:08:15 2022 +0800\n\n    chore: 引用更新\n\n modules/shared/global/index.js | 2 --\n 1 file changed, 2 deletions(-)\n",
+    "time": "Tue Nov 01 2022 21:27:52 GMT+0800 (中国标准时间)",
+    "npmAuthor": "luoju\n",
+    "gitAuthor": "luoju\n"
+  },
+  "gitHead": "8a30f384ce604cade0ae11b83ca9189c80c20323"
+}

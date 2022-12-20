@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "baseUrl": "./",
+    "target": "es6",
+    "module": "es2015",
+    "lib": ["dom", "dom.iterable", "esnext", "es2021"],
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node", //node环境
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react",
+    "typeRoots": ["node_modules/@types", "@types", "types"], // 指定只寻找特定目录下的类型声明文件
+    "paths": {
+      "@/*": ["./*"],
+      "@/": ["./packages"],
+      "@@/*": [".dumi/tmp/*"]
+    },
+    "declaration": true,  // 指定编译生成的类型声明文件输出的目录。不提供的话，默认和生成的 js 文件放在一起
+    "outDir": "./dist",   // 编译文件的输出目录
+    "experimentalDecorators": true
+  },
+  "include": [
+    "typings.d.ts", //配置的.d.ts文件
+    "./src"
+  ],
+  "exclude": ["node_modules", "lib"]
+}
