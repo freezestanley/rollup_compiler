@@ -2,7 +2,7 @@
  * @Author: 徐翔 xuxiang001@zhongan.com
  * @Date: 2022-12-20 00:05:03
  * @LastEditors: 徐翔 xuxiang001@zhongan.com
- * @LastEditTime: 2022-12-20 20:59:53
+ * @LastEditTime: 2022-12-21 00:16:37
  * @FilePath: /rollup/rolldemo/rollup.config.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -27,6 +27,7 @@ import json from '@rollup/plugin-json';
 // import path from 'path'
 import clear from 'rollup-plugin-clear'
 import lodash from 'lodash'
+import postcssurl from 'postcss-url';
 
 const htmlTemplate = `
     <!DOCTYPE html>
@@ -46,6 +47,10 @@ const htmlTemplate = `
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const baseUrl = 'dist'
+const globals = {
+    react: 'react',
+    'react-dom': 'react-dom'
+}
 module.exports = [
 {
     input: './src/index.tsx',
@@ -53,37 +58,22 @@ module.exports = [
         {
             file: `${baseUrl}/cjs/index.js`,
             format: 'cjs',
-            globals: {
-                react: 'react',
-                'react-dom': 'react-dom'
-            }
+            // dir: `${baseUrl}/cjs`,
+            globals
             // sourcemap: true
         },
         {
             file: `${baseUrl}/umd/index.js`,
             format: 'umd',
+            // dir: `${baseUrl}/umd`,
             name: 'index',
-            globals: {
-                react: 'react',
-                'react-dom': 'react-dom'
-            }
+            globals
         },
         {
             file: `${baseUrl}/es/index.js`,
             format: 'es',
-            globals: {
-                react: 'react',
-                'react-dom': 'react-dom'
-            }
-            // sourcemap: true
-        },
-        {
-            file: `${baseUrl}/es/index.js`,
-            format: 'system',
-            globals: {
-                react: 'react',
-                'react-dom': 'react-dom'
-            }
+            // preserveModules: true,
+            globals
             // sourcemap: true
         },
     ],
@@ -111,20 +101,33 @@ module.exports = [
         json(),
         terser(),
         postcss({
-            plugins: [autoprefixer(), cssnano()],
+            plugins: [autoprefixer(), cssnano(),postcssurl({
+                url: 'inline',
+                maxSize: 10 * 1024 * 1024,
+                fallback: {url: 'copy', assetsPath: 'img', useHash: true}
+            })],
             modules: true,
             minimize: true,
             extract: 'css/index.css',
+            // assetFileNames: ({ name }) => {
+            //     console.log(`==========================${name}============================================`)
+            //     const { ext, dir, base } = path.parse(name);
+            //     if (ext !== '.css') return '[name].[ext]';
+            //     return path.join(dir, 'style', base);
+            // }
         }),
         html({ template: () => htmlTemplate }),
         beep(),
         strip(),
-        url(),
+        url({   
+            // 当小于10k,转base64
+            limit: 10 * 1024,
+        }),
         inject({
             "_": [lodash]
         }),
-        isDevelopment && serve(),
-        isDevelopment && livereload(),
+        // isDevelopment && serve(),
+        // isDevelopment && livereload(),
     ],
     external: ['react', 'react-dom']
 }];
