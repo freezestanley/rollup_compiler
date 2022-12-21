@@ -1,7 +1,15 @@
 {
-  "name": "@lcap/shared",
-  "version": "0.0.181",
-  "description": "@lcap/shared",
+  "name": "yoohooroll",
+  "version": "0.0.2",
+  "description": "",
+  "main":"dist/cjs/index.js",
+  "module": "dist/es/index.js",
+  "types": "dist/es/components/index.d.ts",
+  "files": [
+    "dist",
+    "package.json",
+    "README.md"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cross-env NODE_ENV=production rollup -c rollup.config.js --bundleConfigAsCjs",
