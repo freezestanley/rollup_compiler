@@ -5,6 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cross-env NODE_ENV=production rollup -c rollup.config.js --bundleConfigAsCjs",
+    "serve": "cross-env NODE_ENV=production serve dist/umd",
     "prepublishOnly": "npm run build",
     "postpublish": "rimraf -rf lib"
   },
@@ -42,10 +43,12 @@
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "cross-env": "^7.0.3",
     "cssnano": "^5.1.14",
+    "fs-extra": "^11.1.0",
     "node-sass": "^8.0.0",
     "postcss-url": "^10.1.3",
     "rollup": "3.7.5",
     "rollup-plugin-clear": "^2.0.7",
+    "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-dts": "^5.0.0",
     "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-peer-deps-external": "^2.2.4",
