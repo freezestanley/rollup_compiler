@@ -2,7 +2,7 @@
  * @Author: 徐翔 xuxiang001@zhongan.com
  * @Date: 2022-12-20 00:05:03
  * @LastEditors: 徐翔 xuxiang001@zhongan.com
- * @LastEditTime: 2022-12-21 19:13:01
+ * @LastEditTime: 2022-12-22 09:22:14
  * @FilePath: /rollup/rolldemo/rollup.config.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -29,6 +29,8 @@ import clear from 'rollup-plugin-clear'
 import lodash from 'lodash'
 import postcssurl from 'postcss-url';
 import fs from 'fs-extra'
+import eslint from '@rollup/plugin-eslint';
+
 
 
 const htmlTemplate = `
@@ -91,8 +93,12 @@ module.exports = [
             babelHelpers: 'runtime',
             exclude: '**/node_modules/**',
         }),
-        nodeResolve(),
-        commonjs(),
+        nodeResolve({
+            mainFields: ["module", "main"],
+        }),
+        commonjs({
+            include: "node_modules/**",
+        }),
         peerDepsExternal({
             packageJsonPath: './package.json',
             includeDependencies: true,
@@ -127,6 +133,8 @@ module.exports = [
             modules: true,
             minimize: true,
             extract: 'css/index.css',
+            exec: true,
+            to: 'copy'
             // assetFileNames: ({ name }) => {
             //     console.log(`==========================${name}============================================`)
             //     const { ext, dir, base } = path.parse(name);
@@ -144,11 +152,17 @@ module.exports = [
             destDir: path.join(__dirname, 'dist/img'),
             fileName: '[dirname][hash][extname]',
         }),
+        eslint({
+            throwOnError: true,
+            throwOnWarning: true,
+            include: ['src/**'],
+            exclude: ['node_modules/**']
+        }),
         inject({
             "_": [lodash]
         }),
         // isDevelopment && serve(),
         // isDevelopment && livereload(),
     ],
-    external: ['react', 'react-dom']
+    external: ['react', 'react-dom',(id) => id.includes("@babel/runtime"),]
 }];
