@@ -170,18 +170,7 @@ const plugins = [
     preventAssignment: true
   })
 ]
-const devPlugins = [
-  serve({
-    open: true, // 是否打开浏览器
-    contentBase: 'dist/umd/', // 入口html的文件位置
-    historyApiFallback: true, // Set to true to return index.html instead of 404
-    host: 'localhost',
-    port: 10001
-  }),
-  livereload({
-    watch: ['./dist', './src']
-  })
-]
+
 const umd = {
   file: `${baseUrl}/umd/index.js`,
   format: 'umd',
@@ -208,13 +197,25 @@ module.exports = [
     ? {
         input: './src/render.tsx',
         output: [umd],
-        plugins: [plugins, devPlugins],
+        plugins: [
+          ...plugins,
+          serve({
+            open: true, // 是否打开浏览器
+            contentBase: 'dist/umd/', // 入口html的文件位置
+            historyApiFallback: true, // Set to true to return index.html instead of 404
+            host: 'localhost',
+            port: 10001
+          }),
+          livereload({
+            watch: ['./dist', './src']
+          })
+        ],
         external: [(id) => id.includes('@babel/runtime')]
       }
     : {
         input: './src/index.tsx',
         output: [cjs, es],
-        plugins: [plugins],
+        plugins: [...plugins],
         external: ['react', 'react-dom', (id) => id.includes('@babel/runtime')]
       }
 ]
