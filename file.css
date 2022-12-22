@@ -1,0 +1,9 @@
+@custom-media --small-viewport (max-width: 30em);
+
+
+
+:root {
+	--color: red;
+	--color1: red;
+	--grid-gap: 15px;
+}

@@ -7,7 +7,7 @@ const Button: React.FC<ButtonType> = (props: any) => {
   return (
     <div className={Style.Button}>
       {props.children}
-      <img src={aa} alt={'fsffsf'} />
+      <img src={aa} alt={'111'} />
     </div>
   )
 }

@@ -6,7 +6,7 @@ import { Button } from './components'
 function App() {
   return (
     <div className={Style.global}>
-      <Button>this is button</Button>
+      <Button>this is 123123</Button>
     </div>
   )
 }

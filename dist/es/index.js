@@ -1,1 +1,0 @@
-import e from"react";var t="index_Button__pukkt";const r=r=>e.createElement("div",{className:t},r.children,e.createElement("img",{src:"../img/Button/249f4e9adc519175.png",alt:"fsffsf"}));export{r as Button};
