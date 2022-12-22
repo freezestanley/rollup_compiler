@@ -15,6 +15,7 @@
     "build": "cross-env NODE_ENV=production rollup -c rollup.config.js --bundleConfigAsCjs",
     "serve": "cross-env NODE_ENV=production serve dist/umd",
     "prepublishOnly": "npm run build",
+    "pretty:code": "prettier --cache --write \"{src,mock}/**/*.{js,ts,tsx,css,less,md,json}\"",
     "postpublish": "rimraf -rf lib"
   },
   "dependencies": {
@@ -53,6 +54,7 @@
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "cross-env": "^7.0.3",
     "cssnano": "^5.1.14",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-babel": "^5.3.1",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.31.11",

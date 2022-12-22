@@ -5,9 +5,9 @@ module.exports = {
       'plugin:react/recommended',
       'plugin:react-hooks/recommended',
       'plugin:react/jsx-runtime',
-      // 'plugin:prettier/recommended'
+      'plugin:prettier/recommended'
     ],
-    plugins: ['babel', '@typescript-eslint', 'react', 'react-hooks'], // 'prettier'
+    plugins: ['babel', '@typescript-eslint', 'react', 'react-hooks', 'prettier'], // 'prettier'
     parser: '@typescript-eslint/parser',
     env: {
       browser: true,
@@ -54,14 +54,14 @@ module.exports = {
       'react/no-unknown-property': 'off',
       '@typescript-eslint/explicit-function-return-type': 0,
       //{ "allowTypedFunctionExpressions": false }
-      // 'prettier/prettier': [
-      //   'warn',
-      //   {
-      //     useTabs: false,
-      //     proseWrap: 'preserve',
-      //     endOfLine: 'auto'
-      //   }
-      // ],
+      'prettier/prettier': [
+        'warn',
+        {
+          useTabs: false,
+          proseWrap: 'preserve',
+          endOfLine: 'auto'
+        }
+      ],
       '@typescript-eslint/strict-boolean-expressions': [
         0,
         {
