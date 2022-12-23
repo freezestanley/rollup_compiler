@@ -16,3 +16,4 @@ locales/**/*.js
 __mocks__/https/*
 *.pem
 */node_modules/*
+node_modules
