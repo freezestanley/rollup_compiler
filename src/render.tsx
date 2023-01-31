@@ -1,12 +1,12 @@
 import { createRoot } from 'react-dom/client'
 import React from 'react'
 import Style from './index.less'
-import { Button } from './components'
+import Button from './components/Button'
 
 function App() {
   return (
     <div className={Style.global}>
-      <Button>this is 123123</Button>
+      <Button>11111111111111</Button>
     </div>
   )
 }

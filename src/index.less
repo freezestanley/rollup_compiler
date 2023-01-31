@@ -1,24 +1,3 @@
-@import url('./variable.less');
-@custom-media --small-viewport (max-width: 30em);
-@custom-selector: --heading h1, h2, h3;
-:root {
-  --color: red;
-  --color1: red;
-}
-:root {
-  --grid-gap: 15px;
-}
-
-.test-grid {
-  grid-gap: var(--grid-gap);
-  grid-template-columns: repeat(2, 1fr);
-}
-
 .global {
-  background-color: @dark-gold-1;
-  width: 300px;
-  height: 100px;
-  display: flex;
-  border: 1px solid;
-  background: url('./b.png') #f00;
+  background: #ff0000;
 }

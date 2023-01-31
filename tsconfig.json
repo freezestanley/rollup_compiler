@@ -21,8 +21,8 @@
       "@/": ["./packages"],
       "@@/*": [".dumi/tmp/*"]
     },
-    "declaration": true,  // 指定编译生成的类型声明文件输出的目录。不提供的话，默认和生成的 js 文件放在一起
-    "outDir": "./dist",   // 编译文件的输出目录
+    "declaration": true, // 指定编译生成的类型声明文件输出的目录。不提供的话，默认和生成的 js 文件放在一起
+    "outDir": "dist/cjs", // 编译文件的输出目录
     "experimentalDecorators": true
   },
   "include": [

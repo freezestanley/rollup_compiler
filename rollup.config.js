@@ -32,7 +32,7 @@ const htmlTemplate = `
         <head>
         <meta charset="utf-8">
         <title>demo</title>
-        <link rel="stylesheet" href="./css/index.css">
+        <link rel="stylesheet" href="./index.css">
         ${
           isDevelopment &&
           '<script async src="http://localhost:35729/livereload.js?snipver=1"></script>'
@@ -51,14 +51,15 @@ const globals = {
   react: 'react',
   'react-dom': 'react-dom'
 }
+const imgLimit = 50
 
 const plugins = [
   // 清除文件夹
   clear({
     targets: [baseUrl]
   }),
-  // typescript
-  typescript(),
+  // // typescript
+  // typescript(),
   // 获取babel的plugins
   getBabelOutputPlugin({
     allowAllFormats: true
@@ -74,7 +75,9 @@ const plugins = [
   }),
   // cjs转es
   commonjs({
-    include: 'node_modules/**'
+    ignoreGlobal: true,
+    include: /\/node_modules\//,
+    external: ['react', 'react-dom']
   }),
   // peerdepences 转 引用
   peerDepsExternal({
@@ -101,34 +104,28 @@ const plugins = [
       postcssurl([
         {
           url: 'inline',
-          maxSize: 10 * 1024, // 当小于10k的图片转base64
-          // fallback: 'copy',
-          // assetsPath: ((a) => {
-          //     console.log(`==========${path.resolve('dist')}=============`)
-          //     console.log(`==========${__dirname}=============`)
-          //     return path.resolve('dist')
-          // })(),
+          maxSize: imgLimit, // 当小于10k的图片转base64
           useHash: true,
           fallback: (asset, dir, options, decl, warn, result) => {
-            // 当大于10k的图片,直接复制到目录下类似copy
             const p = path.join(
               path.resolve('dist'),
               path
                 .relative(__dirname, asset.absolutePath)
-                .replace('src/', 'img/')
+                .replace('src/', 'umd/')
             )
             fs.copy(asset.absolutePath, p, (err) => {
               if (err) return console.error(err)
               console.log('success!')
             })
-            return `../${path.relative(__dirname, asset.absolutePath)}`
+            // return `../${path.relative(__dirname, asset.absolutePath)}`
+            return `./${path.relative(`${__dirname}/dist/umd/`, p)}`
           }
         }
       ])
     ],
     modules: true,
     minimize: true,
-    extract: 'css/index.css',
+    extract: true, //'css/index.css',
     exec: true,
     to: 'copy'
   }),
@@ -147,17 +144,19 @@ const plugins = [
   url({
     // 当小于10k,转base64
     limit: 10 * 1024,
-    publicPath: '../img/',
-    destDir: path.join(__dirname, 'dist/img'),
+    // publicPath: '../img/',
+    // destDir: path.join(__dirname, 'dist/umd'),
     fileName: '[dirname][hash][extname]'
   }),
   // eslint
-  eslint({
-    throwOnError: true,
-    throwOnWarning: true,
-    include: ['src/**'],
-    exclude: ['node_modules/**']
-  }),
+  isDevelopment
+    ? eslint({
+        throwOnError: true,
+        throwOnWarning: true,
+        include: ['src/**'],
+        exclude: ['node_modules/**']
+      })
+    : '',
   // 全局注入
   inject({
     _: [lodash]
@@ -179,25 +178,31 @@ const umd = {
   // globals
 }
 const cjs = {
-  file: `${baseUrl}/cjs/index.js`,
+  // file: `${baseUrl}/cjs/index.js`,
   format: 'cjs',
-  // dir: `${baseUrl}/cjs`,
+  dir: `dist/cjs`,
   globals
   // sourcemap: true
 }
 const es = {
-  file: `${baseUrl}/es/index.js`,
+  // file: `${baseUrl}/es/index.js`,
+  dir: `dist/es`,
   format: 'es',
   // preserveModules: true,
   globals
   // sourcemap: true
 }
-module.exports = [
-  isDevelopment
-    ? {
+
+module.exports = isDevelopment
+  ? [
+      {
         input: './src/render.tsx',
         output: [umd],
         plugins: [
+          typescript({
+            declaration: true, // 指定编译生成的类型声明文件输出的目录。不提供的话，默认和生成的 js 文件放在一起
+            outDir: 'dist/es'
+          }),
           ...plugins,
           serve({
             open: true, // 是否打开浏览器
@@ -212,10 +217,38 @@ module.exports = [
         ],
         external: [(id) => id.includes('@babel/runtime')]
       }
-    : {
-        input: './src/index.tsx',
-        output: [cjs, es],
-        plugins: [...plugins],
+    ]
+  : [
+      {
+        input: {
+          'components/Button/button': './src/components/Button/index.tsx',
+          'components/Input/input': './src/components/Input/index.tsx'
+        },
+        output: [cjs],
+        plugins: [
+          // typescript
+          typescript({
+            declaration: false, // 指定编译生成的类型声明文件输出的目录。不提供的话，默认和生成的 js 文件放在一起
+            outDir: 'dist/cjs'
+          }),
+          ...plugins
+        ],
+        external: ['react', 'react-dom', (id) => id.includes('@babel/runtime')]
+      },
+      {
+        input: {
+          'components/Button/button': './src/components/Button/index.tsx',
+          'components/Input/input': './src/components/Input/index.tsx'
+        },
+        output: [es],
+        plugins: [
+          // typescript
+          typescript({
+            declaration: true, // 指定编译生成的类型声明文件输出的目录。不提供的话，默认和生成的 js 文件放在一起
+            outDir: 'dist/es'
+          }),
+          ...plugins
+        ],
         external: ['react', 'react-dom', (id) => id.includes('@babel/runtime')]
       }
-]
+    ]
