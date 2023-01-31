@@ -53,12 +53,98 @@ const globals = {
 }
 const imgLimit = 50
 
+const output = {
+  umd: {
+    file: `${baseUrl}/umd/index.js`,
+    format: 'umd',
+    // dir: `${baseUrl}/umd`,
+    name: 'index'
+    // globals
+  },
+  cjs: {
+    // file: `${baseUrl}/cjs/index.js`,
+    format: 'cjs',
+    dir: `dist/cjs`,
+    globals
+    // sourcemap: true
+  },
+  es: {
+    // file: `${baseUrl}/es/index.js`,
+    dir: `dist/es`,
+    format: 'es',
+    // preserveModules: true,
+    globals
+    // sourcemap: true
+  }
+}
+
+// type umd、cjs、es
+const getPostcss = (type = 'umd') => {
+  // 处理css
+  return postcss({
+    plugins: [
+      postcssPresetEnv({
+        autoprefixer: { grid: true }
+      }),
+      // autoprefixer(),
+      cssnano(),
+      // postcss 处理样式内图片
+      postcssurl([
+        {
+          url: 'inline',
+          maxSize: imgLimit, // 当小于10k的图片转base64
+          useHash: true,
+          fallback: (asset, dir, options, decl, warn, result) => {
+            const p = path.join(
+              path.resolve('dist'),
+              path
+                .relative(__dirname, asset.absolutePath)
+                .replace('src/', `${type}/`)
+            )
+            fs.copy(asset.absolutePath, p, (err) => {
+              if (err) return console.error(err)
+              console.log('success!')
+            })
+            return `./${path.relative(`${__dirname}/dist/${type}/`, p)}`
+          }
+        }
+      ])
+    ],
+    modules: true,
+    minimize: true,
+    extract: true, //'css/index.css',
+    exec: true,
+    to: 'copy'
+  })
+}
+
+const getTs = (type = 'umd') => {
+  if (type === 'umd') {
+    // typescript
+    return typescript({
+      declaration: false, // 指定编译生成的类型声明文件输出的目录。不提供的话，默认和生成的 js 文件放在一起
+      outDir: 'dist/es'
+    })
+  } else if (type === 'es') {
+    // typescript
+    return typescript({
+      declaration: true, // 指定编译生成的类型声明文件输出的目录。不提供的话，默认和生成的 js 文件放在一起
+      outDir: 'dist/es'
+    })
+  } else if (type === 'cjs') {
+    // typescript
+    return typescript({
+      declaration: false, // 指定编译生成的类型声明文件输出的目录。不提供的话，默认和生成的 js 文件放在一起
+      outDir: 'dist/cjs'
+    })
+  }
+}
 const plugins = [
   // 清除文件夹
   clear({
     targets: [baseUrl]
   }),
-  // // typescript
+  // typescript
   // typescript(),
   // 获取babel的plugins
   getBabelOutputPlugin({
@@ -91,44 +177,10 @@ const plugins = [
   // 读取json
   json(),
   // 代码压缩
-  terser(),
-  // 处理css
-  postcss({
-    plugins: [
-      postcssPresetEnv({
-        autoprefixer: { grid: true }
-      }),
-      // autoprefixer(),
-      cssnano(),
-      // postcss 处理样式内图片
-      postcssurl([
-        {
-          url: 'inline',
-          maxSize: imgLimit, // 当小于10k的图片转base64
-          useHash: true,
-          fallback: (asset, dir, options, decl, warn, result) => {
-            const p = path.join(
-              path.resolve('dist'),
-              path
-                .relative(__dirname, asset.absolutePath)
-                .replace('src/', 'umd/')
-            )
-            fs.copy(asset.absolutePath, p, (err) => {
-              if (err) return console.error(err)
-              console.log('success!')
-            })
-            // return `../${path.relative(__dirname, asset.absolutePath)}`
-            return `./${path.relative(`${__dirname}/dist/umd/`, p)}`
-          }
-        }
-      ])
-    ],
-    modules: true,
-    minimize: true,
-    extract: true, //'css/index.css',
-    exec: true,
-    to: 'copy'
-  }),
+  terser()
+]
+
+const plugins1 = [
   // 设置html
   html({ template: () => htmlTemplate }),
   // 编译错误时发出警告
@@ -170,40 +222,16 @@ const plugins = [
   })
 ]
 
-const umd = {
-  file: `${baseUrl}/umd/index.js`,
-  format: 'umd',
-  // dir: `${baseUrl}/umd`,
-  name: 'index'
-  // globals
-}
-const cjs = {
-  // file: `${baseUrl}/cjs/index.js`,
-  format: 'cjs',
-  dir: `dist/cjs`,
-  globals
-  // sourcemap: true
-}
-const es = {
-  // file: `${baseUrl}/es/index.js`,
-  dir: `dist/es`,
-  format: 'es',
-  // preserveModules: true,
-  globals
-  // sourcemap: true
-}
-
 module.exports = isDevelopment
   ? [
       {
         input: './src/render.tsx',
-        output: [umd],
+        output: [output.umd],
         plugins: [
-          typescript({
-            declaration: true, // 指定编译生成的类型声明文件输出的目录。不提供的话，默认和生成的 js 文件放在一起
-            outDir: 'dist/es'
-          }),
+          getTs('umd'),
           ...plugins,
+          getPostcss('umd'),
+          ...plugins1,
           serve({
             open: true, // 是否打开浏览器
             contentBase: 'dist/umd/', // 入口html的文件位置
@@ -220,35 +248,25 @@ module.exports = isDevelopment
     ]
   : [
       {
-        input: {
-          'components/Button/button': './src/components/Button/index.tsx',
-          'components/Input/input': './src/components/Input/index.tsx'
-        },
-        output: [cjs],
-        plugins: [
-          // typescript
-          typescript({
-            declaration: false, // 指定编译生成的类型声明文件输出的目录。不提供的话，默认和生成的 js 文件放在一起
-            outDir: 'dist/cjs'
-          }),
-          ...plugins
-        ],
+        input: './src/index.tsx',
+        output: [output.cjs],
+        plugins: [getTs('cjs'), ...plugins, getPostcss('cjs'), ...plugins1],
         external: ['react', 'react-dom', (id) => id.includes('@babel/runtime')]
       },
       {
         input: {
+          main: './src/index.tsx',
           'components/Button/button': './src/components/Button/index.tsx',
           'components/Input/input': './src/components/Input/index.tsx'
         },
-        output: [es],
-        plugins: [
-          // typescript
-          typescript({
-            declaration: true, // 指定编译生成的类型声明文件输出的目录。不提供的话，默认和生成的 js 文件放在一起
-            outDir: 'dist/es'
-          }),
-          ...plugins
-        ],
+        output: [output.es],
+        plugins: [getTs('es'), ...plugins, getPostcss('es'), ...plugins1],
+        external: ['react', 'react-dom', (id) => id.includes('@babel/runtime')]
+      },
+      {
+        input: './src/index.tsx',
+        output: [output.umd],
+        plugins: [getTs('umd'), ...plugins, getPostcss('umd'), ...plugins1],
         external: ['react', 'react-dom', (id) => id.includes('@babel/runtime')]
       }
     ]
