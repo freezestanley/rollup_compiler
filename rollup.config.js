@@ -157,12 +157,14 @@ const plugins = [
   }),
   // 加载node
   nodeResolve({
-    mainFields: ['module', 'main']
+    mainFields: ['module', 'main'],
+    extensions: ['.jsx', '.js', '.mjs', '.less', '.ts', '.tsx']
   }),
   // cjs转es
   commonjs({
     ignoreGlobal: true,
     include: /\/node_modules\//,
+    // exclude: /\/node_modules\//
     external: ['react', 'react-dom']
   }),
   // peerdepences 转 引用

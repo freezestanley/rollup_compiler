@@ -94,14 +94,5 @@
     "react-dom": "^18.2.0"
   },
   "author": "",
-  "license": "ISC",
-  "__LCAP_PUBLISH_DETAIL__": {
-    "version": "0.0.108",
-    "latestCommit": "commit 1e7475d0b6721d8579e99c3999b71e5bbb60f075\nAuthor: luoju <luoju@zhongan.com>\nDate:   Tue Nov 1 21:21:44 2022 +0800\n\n    准备发布108\n\n lerna.json        |     2 +-\n package-lock.json | 37429 +++++++++-------------------------------------------\n package.json      |     2 +-\n 3 files changed, 6507 insertions(+), 30926 deletions(-)\n",
-    "dirLatestCommit": "commit 475d4b857faaabeae052f0a6c9e9690eb24b606b\nAuthor: zhuyongyu001 <zhuyongyu001@zhongan.com>\nDate:   Mon Oct 31 11:08:15 2022 +0800\n\n    chore: 引用更新\n\n modules/shared/global/index.js | 2 --\n 1 file changed, 2 deletions(-)\n",
-    "time": "Tue Nov 01 2022 21:27:52 GMT+0800 (中国标准时间)",
-    "npmAuthor": "luoju\n",
-    "gitAuthor": "luoju\n"
-  },
-  "gitHead": "8a30f384ce604cade0ae11b83ca9189c80c20323"
+  "license": "ISC"
 }
